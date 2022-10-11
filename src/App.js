@@ -12,9 +12,43 @@ function PokemonRow({ pokemon, onClick }) {
 }
 PokemonRow.propTypes = {
   pokemon: PropTypes.shape({
-    type: PropTypes.arrayOf(PropTypes.string),
+    type: PropTypes.arrayOf(PropTypes.string.isRequired),
     name: shape({
-      english: PropTypes.string,
+      english: PropTypes.string.isRequired,
+    }),
+  }),
+  onClick: PropTypes.func.isRequired,
+};
+
+function PokemonInfo({ pokemon }) {
+  return (
+    <div className="border p-2 rounded-lg border-gray-300">
+      <h1 className="text-xl font-semibold">{pokemon.name.english}</h1>
+      <table>
+        <tbody>
+          {Object.keys(pokemon.base).map((k) => (
+            <tr key={k}>
+              <td className="px-2">{k}</td>
+              <td className="px-2">{pokemon.base[k]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+PokemonInfo.propTypes = {
+  pokemon: PropTypes.shape({
+    name: shape({
+      english: PropTypes.string.isRequired,
+    }),
+    base: shape({
+      HP: PropTypes.number.isRequired,
+      Attack: PropTypes.number.isRequired,
+      Defense: PropTypes.number.isRequired,
+      "Sp. Attack": PropTypes.number.isRequired,
+      "Sp. Defense": PropTypes.number.isRequired,
+      Speed: PropTypes.number.isRequired,
     }),
   }),
 };
@@ -68,20 +102,7 @@ function App() {
             </tbody>
           </table>
         </div>
-        <div>
-          {selected && (
-            <div className="border p-2 rounded-lg border-gray-300">
-              <h1 className="text-xl font-semibold">{selected.name.english}</h1>
-              <ul>
-                {Object.keys(selected.base).map((k) => (
-                  <li key={k}>
-                    {k}: {selected.base[k]}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+        <div>{selected && <PokemonInfo pokemon={selected} />}</div>
       </div>
     </div>
   );
