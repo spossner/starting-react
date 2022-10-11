@@ -1,7 +1,6 @@
-import pokemon from "./pokemon.json";
-import PropTypes from "prop-types";
-import { shape } from "prop-types";
+import PropTypes, { shape } from "prop-types";
 import { useEffect, useMemo, useState } from "react";
+
 function PokemonRow({ pokemon, onClick }) {
   return (
     <tr onClick={onClick}>
@@ -54,6 +53,7 @@ PokemonInfo.propTypes = {
 };
 
 function App() {
+  const [pokemon, setPokemon] = useState([]);
   const [filter, setFilter] = useState("");
   const [selected, setSelected] = useState();
 
@@ -64,8 +64,14 @@ function App() {
           p.name.english.toLowerCase().includes(filter.toLowerCase())
         )
         .slice(0, 20),
-    [filter]
+    [filter, pokemon]
   );
+
+  useEffect(() => {
+    fetch("/starting-react/pokemon.json")
+      .then((res) => res.json())
+      .then(setPokemon);
+  }, []);
 
   useEffect(() => {
     if (selected && !filteredPokemon.some((p) => p.id === selected.id)) {
